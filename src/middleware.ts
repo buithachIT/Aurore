@@ -16,6 +16,7 @@ const isPublicPath = (pathname: string) => {
     /^\/product\/[^\/]+$/.test(pathname)
   );
 };
+const PUBLIC_FILE = /\.(png|jpg|jpeg|gif|svg|webp|avif|css|js|ico|json|woff|woff2|ttf|eot)$/i;
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -23,6 +24,10 @@ export function middleware(request: NextRequest) {
 
   if ((pathname === ROUTES.LOGIN || pathname === ROUTES.REGISTER) && token) {
     return NextResponse.redirect(new URL(ROUTES.HOME, request.url));
+  }
+
+  if (PUBLIC_FILE.test(pathname)) {
+    return NextResponse.next();
   }
 
   if (isPublicPath(pathname)) {
