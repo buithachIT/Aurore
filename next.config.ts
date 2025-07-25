@@ -5,20 +5,19 @@ const nextConfig: NextConfig = {
     typedRoutes: false,
   },
   images: {
-    domains: ['localhost'], // 👈 Thêm domain này
+    domains: [
+      'localhost',
+      'auroreecommerce.duckdns.org',
+      '54.206.66.100',
+      'aurore-theta.vercel.app',
+      'cdn-domain.com',
+    ],
   },
-  /* config options here */
   webpack(config) {
-    // Configure webpack to handle SVG files
     config.module.rules.push({
       test: /\.svg$/,
-      use: [
-        {
-          loader: '@svgr/webpack',
-        },
-      ],
+      use: ['@svgr/webpack'],
     });
-
     return config;
   },
 };
