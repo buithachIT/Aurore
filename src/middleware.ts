@@ -3,13 +3,19 @@ import type { NextRequest } from 'next/server';
 import { ROUTES } from '@/config/routes';
 import { STORAGE_KEY } from './config/storage';
 
-const publicPages = [
+const PUBLIC_ROUTES = [
   ROUTES.ABOUT,
   ROUTES.HOME,
   ROUTES.LOGIN,
   ROUTES.REGISTER,
-  ROUTES.PRODUCT_DETAIL,
 ];
+
+const isPublicPath = (pathname: string) => {
+  return (
+    PUBLIC_ROUTES.includes(pathname) ||
+    /^\/product\/[^\/]+$/.test(pathname)
+  );
+};
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -19,7 +25,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(ROUTES.HOME, request.url));
   }
 
-  if (publicPages.some((page) => pathname === page)) {
+  if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
 
@@ -27,9 +33,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.url));
   }
 
-  if (pathname.startsWith('/api')) {
-    return NextResponse.next();
-  }
   return NextResponse.next();
 }
 
